@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
 from models.base_model import BaseModel
-from sqlalchemy import Colunm, String
-from sqlalchem.orm import relationship
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 
 
 class Amenity(BaseModel):

@@ -9,6 +9,7 @@ from datetime import datetime
 from os.path import exists, isdir
 env.hosts = ['52.3.247.130', '54.234.30.56']
 
+
 def do_pack():
     """generates a tgz archive"""
     try:
@@ -18,7 +19,7 @@ def do_pack():
         file_name = "versions/web_static_{}.tgz".format(date)
         local("tar -cvzf {} web_static".format(file_name))
         return file_name
-    except:
+    except Exception as (e):
         return None
 
 
@@ -39,8 +40,9 @@ def do_deploy(archive_path):
         run('rm -rf /data/web_static/current')
         run('ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
         return True
-    except:
+    except Exception as (e):
         return False
+
 
 def deploy():
     """creates and distributes an archive to the web servers"""

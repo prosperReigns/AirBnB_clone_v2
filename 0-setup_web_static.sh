@@ -1,4 +1,5 @@
-cript to that setu web server for deployment
+#!/usr/bin/env bash
+# script to that setup web server for deployment
 
 # Install Nginx if not already installed
 if ! command -v nginx &> /dev/null; then

@@ -1,27 +1,46 @@
 #!/usr/bin/env bash
-# this script sets up web servers for the deployment of web_static
-sudo apt-get update
-sudo apt-get -y install nginx
-sudo ufw allow 'Nginx HTTP'
+# script to that setup web server for deployment
 
-sudo mkdir -p /data/
-sudo mkdir -p /data/web_static/
-sudo mkdir -p /data/web_static/releases/
-sudo mkdir -p /data/web_static/shared/
-sudo mkdir -p /data/web_static/releases/test/
-sudo touch /data/web_static/releases/test/index.html
-sudo echo "<html>
-  <head>
-  </head>
-  <body>
+# Install Nginx if not already installed
+if ! command -v nginx &> /dev/null; then
+	    sudo apt-get update
+	        sudo apt-get install -y nginx
+fi
+
+# Define directories
+data_dir="/data"
+web_static_dir="$data_dir/web_static"
+releases_dir="$web_static_dir/releases"
+shared_dir="$web_static_dir/shared"
+test_release_dir="$releases_dir/test"
+html_file="$test_release_dir/index.html"
+current_link="$web_static_dir/current"
+
+# Create necessary directories if they don't exist
+sudo mkdir -p "$data_dir" "$web_static_dir" "$releases_dir" "$shared_dir" "$test_release_dir"
+sudo touch "$html_file"
+
+# Create fake HTML file for testing
+echo "<html>
+<head>
+</head>
+<body>
     Holberton School
-  </body>
-</html>" | sudo tee /data/web_static/releases/test/index.html
+    </body>
+    </html>" | sudo tee "$html_file"
 
-sudo ln -s -f /data/web_static/releases/test/ /data/web_static/current
+    # Ensure symbolic link exists and points to the test release directory
+    sudo ln -sf "$test_release_dir" "$current_link"
 
-sudo chown -R ubuntu:ubuntu /data/
+    # Set ownership recursively
+    sudo chown -R ubuntu:ubuntu "$data_dir"
 
-sudo sed -i '/listen 80 default_server/a location /hbnb_static { alias /data/web_static/current/;}' /etc/nginx/sites-enabled/default
+    # Update Nginx configuration
+    nginx_config="/etc/nginx/sites-enabled/default"
+    sudo sed -i '/listen 80 default_server/a location /hbnb_static { alias /data/web_static/current/;}' "$nginx_config"
 
-sudo service nginx restart
+    # Restart Nginx
+    sudo service nginx restart
+
+    # Exit successfully
+    exit 0

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}
+    start flask
+{% endblock %}
+
+{% block content %}
+    <UL>
+    {% if states %}
+        {% for state in states.vlaue|sort() %}
+	    <LI> {{ state.id }}: <B> {{ state.name }} </B> </LI>
+	{% endfor %}
+    {% endif %}
+    </UL>
+{% endblock %}

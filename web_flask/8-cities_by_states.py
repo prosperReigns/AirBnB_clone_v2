@@ -7,6 +7,7 @@ from models import storage
 
 app = flask(__name__)
 
+
 @app.teardown_appcontext(exception)
 def close_session():
     storage.close()
